@@ -51,4 +51,4 @@ Automation and monitoring for organic systems is widespread but are mostly used 
 *To download the code, click here.
 *Sharing Knowledge
 
-Visit the wiki for resources related to Robo.Op and creative robotics.
+Visit the wiki for resources related to project R/OSE.
