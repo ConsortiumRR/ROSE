@@ -1,5 +1,8 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include <CircularBuffer.h>
+
+CircularBuffer<byte, 1000> buffer;
 //------------------------------------------ESP-NOW-VARIABLES-----------------------------------------//
 
 // Below is a data structure is defined which allows the ESP32 to receive wireless messages from the senders
@@ -23,31 +26,23 @@ struct_message unit2;
 struct_message unit3;
 struct_message unit4;
 struct_message unit5;
-struct_message unit6;
+
 
 // Create an array with all the structures
-struct_message unitsStruct[] = {unit1, unit2, unit3, unit4, unit5, unit6};
+struct_message unitsStruct[] = {unit1, unit2, unit3, unit4, unit5};
 
 
-
-// Callback function that will be executed when data is received
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
-//  char macStr[18];
-//  Serial.print("Packet received from: ");
-//  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-//           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
-//  Serial.println(macStr);
 
   memcpy(&myData, incomingData, sizeof(myData));
   
 //  Serial.printf("unit ID %u: %u bytes\n", myData.id, len);
   
-  
   // Update the structures with the new incoming data 
   unitsStruct[myData.id - 1].x = myData.x;
-//
-//  Serial.printf("x: %d \n", unitsStruct[myData.id - 1].x);
-//  Serial.println();
+  
+  if(myData.x == true){
+     buffer.push(myData.id);
 }
 
 
@@ -71,8 +66,6 @@ bool queryRecieved = false;
 
 
 unsigned long pulseDuration;
-
-
 
 
 void setup() {
@@ -106,9 +99,7 @@ void setup() {
 
 void loop() {
 
-  //updating an array of bools. 1 = unit switched on. 0 = unit switched off.
   
-      
   
   //messages coming from the robot
   pulseDuration = pulseIn(READPIN, HIGH);
@@ -120,19 +111,21 @@ void loop() {
   if (queryRecieved == true) {
     Serial.println("query recieved");
 
-    for(int i = 0; i<numUnits; i++){
-      if(unitsStruct[i].x == 1){
-        
         //sets 'queryRecieved' to false to enforce one input/one output
         queryRecieved == false;
 
-        //prints
-        Serial.print("go to unit ");
-        Serial.print(i+1);
-        Serial.println();
-      
-        displayBinary(i+1);  
-        delay(500);
+
+       // push unit number to circular buffer
+        byte unit = buffer.shift();
+
+       if (unitStruct[unit-1].x == true){
+       
+        Serial.print("go to unit: ");
+        Serial.println(unit);
+        
+            
+        displayBinary(unit);  
+        delay(100);
         displayBinary(0);
         
         break;
