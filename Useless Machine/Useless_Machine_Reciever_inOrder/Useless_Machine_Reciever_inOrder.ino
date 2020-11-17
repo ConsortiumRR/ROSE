@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <CircularBuffer.h>
 
-CircularBuffer<byte, 1000> buffer;
+CircularBuffer<byte, 10> buffer;
 //------------------------------------------ESP-NOW-VARIABLES-----------------------------------------//
 
 // Below is a data structure is defined which allows the ESP32 to receive wireless messages from the senders
@@ -11,7 +11,7 @@ CircularBuffer<byte, 1000> buffer;
 
 
 typedef struct struct_message {
-  int id;
+  byte id;
   bool x;
 } struct_message;
 
@@ -40,11 +40,15 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
   
   // Update the structures with the new incoming data 
   unitsStruct[myData.id - 1].x = myData.x;
-  
-  if(myData.x == true){
-     buffer.push(myData.id);
-}
 
+  Serial.print(myData.id);
+  Serial.print(", ");
+  Serial.println(myData.x);
+   
+  if(myData.x == true){
+     buffer.unshift(myData.id);
+}
+}
 
 //----------------------------------------------------------------------------------------------------//
 
@@ -64,16 +68,17 @@ int bit3 = 18;
 int doPin[] = {bit0, bit1, bit2, bit3};
 bool queryRecieved = false;
 
+byte unit = 0;
 
 unsigned long pulseDuration;
-
 
 void setup() {
   // Initialize Serial Monitor
   Serial.begin(115200);
 
   //set pins to output and input
-  for (int indexPin = 0; indexPin < numBits; indexPin++) {
+  for (int indexPin = 0; indexPin < numBits; indexPin++) 
+  {
     pinMode (doPin[indexPin], OUTPUT);
   }
 
@@ -98,8 +103,7 @@ void setup() {
 }
 
 void loop() {
-
-  
+ 
   
   //messages coming from the robot
   pulseDuration = pulseIn(READPIN, HIGH);
@@ -113,25 +117,36 @@ void loop() {
 
         //sets 'queryRecieved' to false to enforce one input/one output
         queryRecieved == false;
+        
+        // shift unit number to circular buffer
+        unit = buffer[0];
 
-
-       // push unit number to circular buffer
-        byte unit = buffer.shift();
-
-       if (unitStruct[unit-1].x == true){
+       if (unitsStruct[unit].x == true)
+       {
        
         Serial.print("go to unit: ");
         Serial.println(unit);
-        
+
+        Serial.print("buffer order: ");
+       
+          Serial.print(buffer[0]);
+          Serial.print(", ");
+          
+          Serial.print(buffer[1]);
+          Serial.print(", ");
+          
+          Serial.print(buffer[2]);
+          Serial.print(", ");
+        }
+        Serial.println();
             
         displayBinary(unit);  
-        delay(100);
+        delay(500);
         displayBinary(0);
         
-        break;
       }
-    }  
-  }
+      
+ 
   
   else if (queryRecieved == false)
   { 
