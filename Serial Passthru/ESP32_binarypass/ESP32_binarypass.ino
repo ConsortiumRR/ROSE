@@ -33,7 +33,7 @@ int pulselengths[] = {5000, 10000, 15000, 20000};
 int pulsetolerance = 500;
 
 //Serial Pass variables for sending robot signals to other devices
-byte prevByte = 0; 
+int prevByte = 0; 
 byte inputByte = 0;
 
 int UARTbaud = 9600;  
@@ -66,32 +66,33 @@ void setup() {
 
 void loop() {
   // go to designated read mode
- if (Mode_pulsein == true){
-  ReadPulseIn; 
- }
- else if (Mode_binarypass == true){
-  BinaryPass; 
- }
+  if (Mode_pulsein){
+    ReadPulseIn();
+  }
+  else if (Mode_binarypass){
+  BinaryPass(); 
+}
 }
 
 
 void BinaryPass(){
-  int message; 
-  // check for a new byte val from robot until a new one is sent
-  while (inputByte == prevByte){
-    for (int i = 0; i<numiBits; i++){
-      if (digitalRead(diPin[i]) == 1){
-      inputByte |= (1<<i);
-      }
+  // create an int to store robot input
+  int message = 0; 
+  for (int i=0; i<numiBits;i++){
+    // read binary pin input and convert to a number
+    if (digitalRead(diPin[i])==HIGH){
+      message += pow(2,i);
     }
   }
-  // set byte vals equal
-  prevByte = inputByte; 
-  message = int(inputByte);
-  Serial.print("sending byte:");
-  Serial.println(inputByte);
-  //send value over Uart 
-  UART2.write(message); 
+  // if the input is new send via serial
+  if (prevByte != message){
+    prevByte = message; 
+    Serial.print("sending int: ");
+    Serial.print(message);
+    //send value over Uart 
+    UART2.write(message); 
+  }
+
 
 }
 

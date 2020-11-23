@@ -36,8 +36,8 @@ MODULE CPXColorTest
         ConfJ\Off;
         TPErase;
         AliasIO GI_0108,HubByteIn;
-        AliasIO DSQ651_10_DO_01,InputPower;
-        AliasIO GO_0310, HubByteOut; 
+        AliasIO DSQ651_DO_01,InputPower;
+        AliasIO GO_0306, HubByteOut; 
         !set the signal power do to high
         SetDO InputPower,1;
 
@@ -57,13 +57,13 @@ MODULE CPXColorTest
         !this could be replaced with a program end command in the error handler
         WHILE check=1 DO
             !Ask user to give a color
-            TPWrite "Color Library: OFF:1, WHITE:2, RED:3, ROSE:4, MAGENTA:5, VIOLET:6, BLUE:7,";
+            TPWrite "Color Library: OFF:1, WHITE:2, RED:3, ROSE:4, MAGENTA:5, VIOLET:6, BLUE:7, ";
             TPWrite "AZURE:8, CYAN:9, AQUA:10, GREEN:11, LIME:12, YELLOW:13, ORANGE:14, SIENNA:15";
             TPReadDnum Inputnum, "Select color command:";
             !Turn off the desired switch
             IF Inputnum>0 AND Inputnum<=15 THEN
                 SetGO HubByteOut, (Inputnum-1);
-                TPWrite "You selected" + colorlib{DnumToNum(inputnum)}; 
+                TPWrite "You selected " + colorlib{DnumToNum(inputnum)}; 
             ELSE
                 TPWrite "Input out of bounds - select again";
             ENDIF
