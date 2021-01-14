@@ -23,7 +23,7 @@ def wheel(pos):
         return (0, 255 - pos * 3, pos * 3)
     pos -= 170
     return (pos * 3, 0, 255 - pos * 3)
-    
+
 def rainbow_cycle(wait):
     for j in range(255):
         for i in range(10):
@@ -53,11 +53,11 @@ ORANGE = (190, 80, 0)
 SIENNA = (80, 24, 0)
 # ------------------------------
 # standard 15 color library
-# color_lib = [OFF, WHITE, RED, ROSE, MAGENTA, VIOLET, DARKBLUE, BLUE, AZURE, CYAN, AQUA, GREEN, LIME, YELLOW, ORANGE, SIENNA]
+color_lib = [OFF, WHITE, RED, ROSE, MAGENTA, VIOLET, DARKBLUE, BLUE, AZURE, CYAN, AQUA, GREEN, LIME, YELLOW, ORANGE, SIENNA]
 # custom color library
-color_lib = [OFF, WHITE, BVIOLET, BLUE, LTBLUE, AZURE, SIENNA, ORANGE, YELLOW]
-# signal number to use for custom led displays
-display1 = 15
+#color_lib = [OFF, WHITE, BVIOLET, BLUE, LTBLUE, AZURE, SIENNA, ORANGE, YELLOW]
+# signal number to use for custom led displays instead of library
+display1 = 14
 # ------------------------------
 # Actual loop code
 while True:
@@ -65,6 +65,9 @@ while True:
     data = uart.read(1)
     # get data from the UART serial input
 
+    #for n in range(0,15): #cycle through numbers for debugging
+    #    time.sleep(1) #cycle through numbers for debugging
+    #    colorindex = n #cycle through numbers for debugging
     if data is not None:
         colorindex = data[0]
         #print(data)
@@ -75,7 +78,7 @@ while True:
                 pixels.show()
         elif colorindex == display1:
             # use for custom led display
-            # needs debugging - gets stuck in a loop 
+            # needs debugging - gets stuck in a loop
                     while colorindex == display1:
                         rainbow_cycle(.05)
         else:
