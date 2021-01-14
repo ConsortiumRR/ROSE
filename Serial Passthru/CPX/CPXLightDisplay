@@ -1,0 +1,84 @@
+import board
+import busio
+import neopixel
+import time
+import digitalio
+import random
+from struct import unpack
+# ------------------------------
+pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=0.3, auto_write=False)
+led = digitalio.DigitalInOut(board.D13)
+led.direction = digitalio.Direction.OUTPUT
+# ------------------------------
+uart = busio.UART(board.TX, board.RX, baudrate=115200)
+# ------------------------------
+# definitions used for custom functions / displays
+def wheel(pos):
+    if pos < 0 or pos > 255:
+        return (0, 0, 0)
+    if pos < 85:
+        return (255 - pos * 3, pos * 3, 0)
+    if pos < 170:
+        pos -= 85
+        return (0, 255 - pos * 3, pos * 3)
+    pos -= 170
+    return (pos * 3, 0, 255 - pos * 3)
+    
+def rainbow_cycle(wait):
+    for j in range(255):
+        for i in range(10):
+            rc_index = (i * 256 // 10) + j * 5
+            pixels[i] = wheel(rc_index & 255)
+        pixels.show()
+        time.sleep(wait)
+# ------------------------------
+# LED RGB values for color library
+OFF = (0, 0, 0)
+WHITE = (80, 80, 80)
+RED = (255, 0, 0)
+ROSE = (180, 0, 51)
+MAGENTA = (255, 0, 255)
+VIOLET = (51, 0, 153)
+BVIOLET = (20, 0, 102)
+DARKBLUE = (10, 0, 80)
+LTBLUE = (0, 0, 180)
+BLUE = (0, 0, 255)
+AZURE = (0, 102, 204)
+CYAN = (51, 204, 255)
+AQUA = (20, 102, 20)
+GREEN = (0, 255, 0)
+LIME = (128, 255, 0)
+YELLOW = (255, 180, 0)
+ORANGE = (190, 80, 0)
+SIENNA = (80, 24, 0)
+# ------------------------------
+# standard 15 color library
+# color_lib = [OFF, WHITE, RED, ROSE, MAGENTA, VIOLET, DARKBLUE, BLUE, AZURE, CYAN, AQUA, GREEN, LIME, YELLOW, ORANGE, SIENNA]
+# custom color library
+color_lib = [OFF, WHITE, BVIOLET, BLUE, LTBLUE, AZURE, SIENNA, ORANGE, YELLOW]
+# signal number to use for custom led displays
+display1 = 15
+# ------------------------------
+# Actual loop code
+while True:
+    data = 0
+    data = uart.read(1)
+    # get data from the UART serial input
+
+    if data is not None:
+        colorindex = data[0]
+        #print(data)
+        if colorindex > 0 and colorindex is not display1:
+            # displays color from color library
+                for x in range(1):
+                    pixels[x] = (color_lib[colorindex])
+                pixels.show()
+        elif colorindex == display1:
+            # use for custom led display
+            # needs debugging - gets stuck in a loop 
+                    while colorindex == display1:
+                        rainbow_cycle(.05)
+        else:
+            # set all pixels to black/off
+            pixels.fill(OFF)
+            pixels.show()
