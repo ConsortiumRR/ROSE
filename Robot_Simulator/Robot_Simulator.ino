@@ -95,6 +95,7 @@ void loop() {
         digitalWrite(pulsePin, LOW);
         break;
     }
+    delay(1000);
 
   }
 
