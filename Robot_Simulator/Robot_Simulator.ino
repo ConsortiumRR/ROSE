@@ -1,7 +1,7 @@
 int pulselengths[] = {5000, 10000, 15000, 20000, 25000}; //set pulse lengths
-const char  pulsecommand[] = {"NONE", "FORWARD", "RETRACT", "STOP", "PREHEAT", "OFF"};
+const char  *pulsecommand[] = {"NONE", "FORWARD", "RETRACT", "STOP", "PREHEAT", "OFF"};
 
-int potPin = 2;
+int potPin = A2;
 int buttonPin = 3;
 int pulsePin = 4;
 
@@ -43,18 +43,22 @@ void loop() {
     if (button != buttonState) {
       buttonState = button;
     }
-  }
+  
 
   if (buttonState == HIGH) {
-
+   
     potReading = analogRead(potPin);
+    
+    
     potReading = map(potReading, 0, 1023, 0, 5);
-
+    
+    
 
     switch (potReading) {
 
       case  0:
         Serial.println(pulsecommand[potReading]);
+        
         digitalWrite(pulsePin, HIGH);
         delayMicroseconds(potReading);
         digitalWrite(pulsePin, LOW);
@@ -98,6 +102,6 @@ void loop() {
     delay(1000);
 
   }
-
+ }
   lastButtonState = button;
 }
