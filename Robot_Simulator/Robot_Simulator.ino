@@ -1,4 +1,4 @@
-int pulselengths[] = {5000, 10000, 15000, 20000, 25000}; //set pulse lengths
+int pulselengths[] = {5000, 10000, 15000, 20000, 25000, 30000}; //set pulse lengths
 const char  *pulsecommand[] = {"NONE", "FORWARD", "RETRACT", "STOP", "PREHEAT", "OFF"};
 
 int potPin = A2;
@@ -60,46 +60,46 @@ void loop() {
         Serial.println(pulsecommand[potReading]);
         
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  1:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  2:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  3:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  4:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  5:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(potReading);
+        delayMicroseconds(pulselengths[potReading]);
         digitalWrite(pulsePin, LOW);
         break;
     }
-    delay(1000);
+    delay(500);
 
   }
  }
