@@ -19,6 +19,7 @@ void setup() {
 
   pinMode(buttonPin, INPUT);
   pinMode(potPin, INPUT);
+  pinMode(pulsePin, OUTPUT);
 }
 
 void loop() {
@@ -60,42 +61,48 @@ void loop() {
         Serial.println(pulsecommand[potReading]);
         
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(5);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  1:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(10);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  2:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(15);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  3:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(20);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  4:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(25);
         digitalWrite(pulsePin, LOW);
         break;
 
       case  5:
         Serial.println(pulsecommand[potReading]);
         digitalWrite(pulsePin, HIGH);
-        delayMicroseconds(pulselengths[potReading]);
+        //delayMicroseconds(pulselengths[potReading]);
+        delay(30);
         digitalWrite(pulsePin, LOW);
         break;
     }
