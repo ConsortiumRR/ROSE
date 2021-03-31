@@ -3,7 +3,7 @@
 #include <PubSubClient.h>
 
 // Change the credentials below, so your ESP8266 connects to your router
-const char* ssid = "CRR";
+const char* ssid = "CRR_2.4GHz";
 const char* password = "abbirb6700";
 
 // Change the variable to your Raspberry Pi IP address, so it connects to your MQTT broker
@@ -24,7 +24,7 @@ void setup_wifi() {
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+    Serial.print(":");
   }
   Serial.println("");
   Serial.print("WiFi connected - ESP IP address: ");
@@ -50,17 +50,21 @@ void callback(String topic, byte* message, unsigned int length) {
   // Feel free to add more if statements to control more GPIOs with MQTT
 
   // If a message is received on the topic room/lamp, you check if the message is either on or off. Turns the lamp GPIO according to the message
-  if(topic=="Test/OnOff"){
+  if(topic=="lamp/test"){
       Serial.print("Changing Room lamp to ");
       if(messageTemp == "on"){
-        digitalWrite(lamp, HIGH);
+        digitalWrite(lamp, LOW);
         Serial.print("On");
       }
       else if(messageTemp == "off"){
-        digitalWrite(lamp, LOW);
+        digitalWrite(lamp, HIGH);
         Serial.print("Off");
       }
   }
+
+  if(topic=="update"){
+    Serial.print("update");
+    }
   Serial.println();
 }
 
@@ -85,7 +89,8 @@ void reconnect() {
       Serial.println("connected");  
       // Subscribe or resubscribe to a topic
       // You can subscribe to more topics (to control more LEDs in this example)
-      client.subscribe("room/lamp");
+      client.subscribe("lamp/test");
+      client.subscribe("update");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
