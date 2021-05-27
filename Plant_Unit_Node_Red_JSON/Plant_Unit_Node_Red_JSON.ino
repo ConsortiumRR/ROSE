@@ -6,25 +6,25 @@
 
 //____________________Unit Name____________________________________
 
-const char unitName[] = "unit1";
+const char unitName[] = "unit3";
 
 //JSON object
 DynamicJsonDocument  parseJson(200);
 
 
 // Initializes the espClient. You should change the espClient name if you have multiple ESPs running in your automation system
-WiFiClient unit1;
-PubSubClient client(unit1);
+WiFiClient unit3;
+PubSubClient client(unit3);
 
 //____________________Subscribed_to_____________________________
 
 
-const char Input[] = "rose/unit1_from_hub";
+const char Input[] = "rose/unit3_from_hub";
 
 
 //____________________Publishing_to____________________________
 
-const char Output[] = "rose/unit1_to_hub";
+const char Output[] = "rose/unit3_to_hub";
 
 //____________________Sensor_Callibration____________________________
 /*
@@ -227,7 +227,7 @@ void loop() {
 
     float moistureLevel = analogRead(moisturePin);
     
-    moistureLevel = map(moistureLevel, dryVal, wetVal, 0, 100);
+    //moistureLevel = map(moistureLevel, dryVal, wetVal, 0, 100);
 
     
     Serial.print("moistureLevel is: ");

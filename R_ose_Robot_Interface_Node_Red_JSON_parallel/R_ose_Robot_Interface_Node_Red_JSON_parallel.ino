@@ -47,6 +47,9 @@ char* mqtt_server = "192.168.50.47";
 int numiBits = 4;
 int numoBits = 4;
 int pBinaryNum = 0;
+int robotInputNum = 0;
+int pRobotInputNum = 0;
+
 //input (ABB-> Hub) IO binary pins
 int ibit0 = 36;
 int ibit1 = 39;
@@ -183,31 +186,37 @@ void loop() {
 
   //messages coming from the robot
 
-
   //robot tells interface to get watering array from hub
-  if (readBinary() == 1) {
+ 
+
+
+ //Problemssssss - my suggestion would be to try case/switch
+
+  
+  //Robot tells interface to tell it what unit needs watering.
+ if (readBinary() == 2) {
+    Serial.println("passing watering numbers");
+    
+//    for (int i = 0; i < sizeof(wateringArray); i++) {
+//      if (wateringArray[i] == true)
+//      {
+//        displayBinary(i + 3);
+//        delay(1000);
+//        displayBinary(0);
+        
+        //wateringArray[i] = false;
+//        break;
+ //     }
+ }
+ if (readBinary() == 1) {
 
     Serial.println("get array from node red");
     client.publish(Output, "true");
 
   }
-  //Robot tells interface to tell it what unit needs watering.
-  if (readBinary() == 2) {
-
-
-    for (int i = 0; i < sizeof(wateringArray); i++) {
-      if (wateringArray[i] == true)
-      {
-        displayBinary(i + 1);
-        delay(500);
-        displayBinary(0);
-        wateringArray[i] = false;
-        break;
-      }
-
-    }
-  }
 }
+
+
 
 
 int readBinary() {
@@ -219,18 +228,21 @@ int readBinary() {
       binaryNum += pow(2, i);
     }
   }
-
+   
   if (binaryNum != pBinaryNum) {
+    pBinaryNum = binaryNum;        
     return binaryNum;
+    
+    
   }
-  else {
-    return 0;
-  }
+ else{
+  return 0;
+ }
 
 }
 
 void displayBinary(byte number) {
-
+Serial.println(number);
   for (int i = 0; i < numoBits; i++) {
     if (bitRead(number, i) == 1) {
       digitalWrite(doPin[i], HIGH);
